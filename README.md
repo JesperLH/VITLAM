@@ -41,3 +41,8 @@ How to call the functions and illustrating the effect of different parameter set
 * demoPlotBloatedComponents
 * demoPlotSpatialSlices
 * demoPlotNoisemap
+
+## References
+For most use cases a link to either this toolbox or the Brain Connectivity project will surfice. The foundations for **plotBrain, plotComponents, plotBloatedVoxels** and **plotBloatedComponents** were introduced in [1]. The foundations for **plotSpatialSlices** is presented in an article currently under review (will be added in the future).
+
+ * [1] Hinrich, J. L., Bardenfleth, S. E., Røge, R. E., Churchill, N. W., Madsen, K. H., & Mørup, M. (2016). Archetypal Analysis for Modeling Multisubject fMRI Data. IEEE Journal of Selected Topics in Signal Processing, 10(7), 1160-1171.
