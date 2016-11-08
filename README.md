@@ -35,7 +35,9 @@ Common properties
 * Highly customizable output, see demostration scripts for further detail.
 
 ## Demonstrators:
-* demoPlotComponents:         
-* demoPlotBloatedComponents:  
-* demoPlotSpatialSlices:      
-* dempPlotNoisemap:           
+How to call the functions and illustrating the effect of different parameter settings.
+
+* demoPlotComponents
+* demoPlotBloatedComponents
+* demoPlotSpatialSlices
+* demoPlotNoisemap
