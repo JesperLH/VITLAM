@@ -18,8 +18,9 @@ plotComponents(A(:,subset),S(subset,:,:),mask,...,)
             'FontSize',18,... % Self-explanatory. Note titles has Fontsize+2 
             'LineWidth',2,... % Width of the temporal activation
             'save','',... %Saves .png and .eps to the given directory, if '' figures aren't saved
-            'Position',[0 0 800 450],... %Figure position lower left and upper right cornor
+            'Position',[0 0 800 500],... %Figure position lower left and upper right cornor
             'threshold',[-0.9:0.1:-0.3 , 0.3:0.1:0.9],...
+            'title','Latent Component',... % The title for each figure is enumerated
             'Scaling','absmax');
 %% Plotting only spatial maps
 plotComponents(A(:,1),[],mask,'Position',[50 50 800 350])

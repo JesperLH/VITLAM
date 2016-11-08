@@ -39,13 +39,13 @@ function plotComponents(A,S,mask,varargin)
 
 %% Parse arguments and check if parameter/value pairs are valid 
 paramNames = {'inConvention','outConvention','TR','Fontsize','LineWidth','save',...
-              'Position','threshold','Scaling','color'};
+              'Position','threshold','Scaling','color','title'};
 defaults   = {'Radiological', 'Neurological',2.49,    18    , 2 ,'',...
-              [0 0 800 425],[-.9:.1:-.1 , 0.1:0.1:.9],'absmax',...
-              repmat([0 1 0; 1 0 0],1,1,size(A,2))};
+              [0 0 800 500],[-.9:.1:-.1 , 0.1:0.1:.9],'absmax',...
+              repmat([0 1 0; 1 0 0],1,1,size(A,2)),'Latent Component'};
 
 [inputConvention, outputConvention, TR, f_size, l_size,save_loc,...
-    fig_position,threshold,scaling,colors2use]...
+    fig_position,threshold,scaling,colors2use,strTitle]...
     = internal.stats.parseArgs(paramNames, defaults, varargin{:});
 
 %TODO customizable??
@@ -125,16 +125,18 @@ for j = 1:size(A,2) %Illustrate every component
         ylabel('Activation')
 
         set(gca,'fontsize',f_size)
-        if nargin <= 7
-            str = sprintf('Latent Component %i',j);
+        if ~isempty(strTitle);
+            str = sprintf('%s %i',strTitle,j);
             title(str,'FontSize',f_size+2);
         end
     
         %Move slightly to the left
         pos = get(gca, 'Position');
-        xoffset = -0.04;
-        pos(1) = pos(1) + xoffset;
-        pos(3) = pos(3) -2* xoffset;
+        xoffset = 0.03;
+        pos(1) = pos(1) - xoffset;
+        pos(3) = pos(3) +2* xoffset;
+        pos(2) = pos(2) + xoffset;
+        pos(4) = pos(4)*0.95; 
         set(gca, 'Position', pos)
     end
     %Save file

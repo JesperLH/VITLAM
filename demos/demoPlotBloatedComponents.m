@@ -20,6 +20,6 @@ Amaxabs = A/max(abs(A(:)));
 figure('Units','normalized','position',[0.05,0.05,0.7,0.8])
 for i = 1:9
     subplot(3,3,i)
-    plotBrainBloatedVoxels(Amaxabs,mask,'threshold',[-i/10,i/10]);
+    plotBrainBloatedVoxels(Amaxabs(:,[1:5,7,8]),mask,'threshold',[-i/10,i/10]);
     title(sprintf('A_{absmax}, threshold \\pm %1.1f',i/10))
 end

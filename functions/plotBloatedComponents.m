@@ -44,7 +44,7 @@ defaults   = {'Radiological', 'Neurological',    18 ,'',...
 
 %TODO customizable??
 viewSetting = [140 60; 210 60; 0 0]; % ViewSetting affect zoomLevel
-zoomLevel = [5/3,5/3,1.3]; % Zoom level affects display of s
+zoomLevel = [2,2,1.3]; % Zoom level affects display of s
 s = {'','','Back Side'}; %Note, first and second argument plots weirdly
 
 %% Validate custom input
