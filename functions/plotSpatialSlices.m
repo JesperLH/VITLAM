@@ -61,9 +61,13 @@ function plotSpatialSlices(MAPS, TIMESERIES, mask, mask_mat,varargin)
 %      'psd'            Show Power Spectrum Density instead of timeseries.
 %                       The psd is calculated using "pwelch" for each
 %                       subject (default value: false).
+%      'time_text'      Cell-array with strings shown above timeseries (if
+%                       plotted) for each component
+%      'text_below_slices'  Cell-array strings shown below maps for each 
+%                           component
 %
 %
-%% Written by Jesper L. Hinrich and Søren F. V. Nielsen
+%% Written by Jesper L. Hinrich and Sï¿½ren F. V. Nielsen
 % Copyright (C) 2016 Technical University of Denmark - All Rights Reserved
 % You may use, distribute and modify this code under the terms of the 
 % Visualization Toolbox for Latent Variable Modeling of fMRI license.
@@ -76,14 +80,16 @@ function plotSpatialSlices(MAPS, TIMESERIES, mask, mask_mat,varargin)
 % Parse arguments and check if parameter/value pairs are valid 
 paramNames = {'nslices','slices','threshold_z','fontsize','save',...
               'suptitle','placetime','ratio','TR','grid','histogram',...
-              'bins','histtype','histinslices','psd','opts'};
+              'bins','histtype','histinslices','psd','opts', 'time_text',...
+              'text_below_slices'};
 defaults = {9, [], 1 , 12 , [],...
             [],'right', 0.75, [], [], false,...
-            50, 'proportion', false, false,[]};
+            50, 'proportion', false, false,[],[],[]};
 
 [numslices, slices, thresh, fs, save_loc,...
     super_title, place_time, slice_time_ratio, TR, custom_grid, show_hist,...
-    nbins,hist_method,histogramInSlice,show_psd,opts]...
+    nbins,hist_method,histogramInSlice,show_psd, opts, time_text, ...
+    text_below_slices]...
     = internal.stats.parseArgs(paramNames, defaults, varargin{:});
 %Supporting passing a struct "opts" with optional parameters. In order to
 %allow simultaneous an "opts" structure and variable input arguments(varargin) 
@@ -98,6 +104,8 @@ if ~isempty(opts)
     save_loc = mgetopt(opts,'save',save_loc);
     super_title = mgetopt(opts,'suptitle',super_title);
     place_time = mgetopt(opts,'placetime',place_time);
+    time_text = mgetopt(opts,'time_text',time_text); % text above time
+    text_below_slices = mgetopt(opts,'text_below_slices',text_below_slices); 
     slice_time_ratio = mgetopt(opts,'ratio',slice_time_ratio);
     TR = mgetopt(opts,'TR',TR);
     custom_grid = mgetopt(opts,'grid',custom_grid);
@@ -107,6 +115,7 @@ if ~isempty(opts)
     histogramInSlice = mgetopt(opts,'histinslices',histogramInSlice);
     show_psd = mgetopt(opts,'psd',show_psd); %Power Spectrum Density
 end
+
 % Make sure slices are initialized
 if isempty(slices)
     slices = floor(linspace(1,size(mask,3),numslices));
@@ -134,7 +143,7 @@ end
 if strcmp(place_time,'below')
     vplots = vplots+~isempty(TIMESERIES);
 elseif strcmp(place_time,'right')
-    hplots = ceil(hplots*(1+slice_time_ratio*(~isempty(TIMESERIES))));
+    hplots = ceil(hplots*(1+slice_time_ratio*(~isempty(TIMESERIES) | show_hist)));
 end
 
 %% 
@@ -196,7 +205,18 @@ for nc = 1:noc
             sub_pos = get(gca,'position'); % get subplot axis position
             set(gca,'position',sub_pos.*[1 1 0.8 1]+[sub_pos(3)*0.15,0,0,0])
         end
+        % get lower left corner position and lower right corner position
+        if s == length(slices)
+            pos = get(gca,'Position');
+            pos = [pos(1)-pos(3)*(hplots-1)+1/2*pos(3) pos(2)-1/10 (hplots-1)*pos(3) 1/10];
+            text_ax = axes('Position',pos,'Visible','off');
+        end
+        
     end
+    
+    % Draw text
+    axes(text_ax);
+    text(0.5,0.5,text_below_slices{nc}, 'FontSize',fs)
     
     if ~isempty(TIMESERIES)% plot time series
         %% Determine subplot location
@@ -251,7 +271,11 @@ for nc = 1:noc
             
             set(gca,'Fontsize',fs)
             xlabel('Time'); ylabel('Activation')
-            title( sprintf('Component %d' , nc) , 'FontSize',fs+2)
+            if isempty(time_text)
+                title( sprintf('Component %d' , nc) , 'FontSize',fs+2)
+            else
+                title( time_text{nc} , 'FontSize',fs+2)
+            end
         elseif ~isempty(TIMESERIES) && show_psd 
             %% Plot power spectrum density
             pwelch(squeeze(TIMESERIES(nc,:,:)),[],[],[],TR^(-1));
