@@ -206,7 +206,7 @@ for nc = 1:noc
             set(gca,'position',sub_pos.*[1 1 0.8 1]+[sub_pos(3)*0.15,0,0,0])
         end
         % get lower left corner position and lower right corner position
-        if s == length(slices)
+        if s == length(slices) && ~isempty( text_below_slices )
             pos = get(gca,'Position');
             pos = [pos(1)-pos(3)*(hplots-1)+1/2*pos(3) pos(2)-1/10 (hplots-1)*pos(3) 1/10];
             text_ax = axes('Position',pos,'Visible','off');
@@ -214,9 +214,11 @@ for nc = 1:noc
         
     end
     
-    % Draw text
-    axes(text_ax);
-    text(0.5,0.5,text_below_slices{nc}, 'FontSize',fs)
+    if ~isempty( text_below_slices )
+        % Draw text
+        axes(text_ax);
+        text(0.5,0.5,text_below_slices{nc}, 'FontSize',fs+2)
+    end
     
     if ~isempty(TIMESERIES)% plot time series
         %% Determine subplot location
@@ -274,7 +276,7 @@ for nc = 1:noc
             if isempty(time_text)
                 title( sprintf('Component %d' , nc) , 'FontSize',fs+2)
             else
-                title( time_text{nc} , 'FontSize',fs+2)
+                title( time_text{nc} , 'FontSize',fs+2, 'FontWeight', 'normal')
             end
         elseif ~isempty(TIMESERIES) && show_psd 
             %% Plot power spectrum density
