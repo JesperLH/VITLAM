@@ -34,12 +34,12 @@ function plotBloatedComponents(A,mask,varargin)
 
 %% Parse arguments and check if parameter/value pairs are valid
 paramNames = {'inConvention','outConvention','FontSize','save',...
-    'Position','threshold','color'};
+    'Position','threshold','color','anatomical'};
 defaults   = {'Radiological', 'Neurological',    18 ,'',...
-    [0 0 0.5 0.3],[-0.5,0.5],[]};
+    [0 0 0.5 0.3],[-0.5,0.5],[],[]};
 
 [inputConvention, outputConvention, f_size, save_loc,...
-    fig_position,threshold,colorlist]...
+    fig_position,threshold,colorlist,anatomical_map]...
     = internal.stats.parseArgs(paramNames, defaults, varargin{:});
 
 %TODO customizable??
@@ -61,9 +61,16 @@ for i = 1:3
     subplot(3,3,plotArea(i,:))
     %If input convention is different from output convension
     flip_x = ~strcmpi(inputConvention,outputConvention);
+    
+    if ~isempty(anatomical_map)
+        [clab,cticks] = plotBrainBloatedVoxels(A,mask,'flipx',flip_x,'view',viewSetting(i,:),...
+        'zoom',zoomLevel(i),'threshold',threshold,'color',colorlist,...
+        'colorbar',false,'anatomical',anatomical_map);
+    else
     [clab,cticks] = plotBrainBloatedVoxels(A,mask,'flipx',flip_x,'view',viewSetting(i,:),...
         'zoom',zoomLevel(i),'threshold',threshold,'color',colorlist,...
         'colorbar',false);
+    end
     
     set(gca,'Fontsize',f_size)
     title(s{i},'FontSize',f_size+2)
